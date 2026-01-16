@@ -1,5 +1,5 @@
 // 配置：你的Cloudflare Worker地址（必须修改）
-const WORKER_API_URL = "https://shop-api.你的域名.workers.dev";
+const WORKER_API_URL = "https://shop-api.wo785655730.workers.dev/";
 
 // DOM元素引用
 const orderIdInput = document.getElementById('orderId');
