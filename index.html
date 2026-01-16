@@ -1,96 +1,28 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>数字商品兑换中心</title>
-    <!-- 引入样式文件 -->
-    <link rel="stylesheet" href="style.css">
-    <!-- 引入Google字体 -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
-    <!-- 引入FontAwesome图标 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>您的资料下载站</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 500px; }
+        body { font-family: sans-serif; text-align: center; padding: 200px; }
+        input, button { padding: 10px; margin: 10px; }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <!-- 网站标题区 -->
-        <header class="header">
-            <i class="fas fa-download logo-icon"></i>
-            <h1>数字商品兑换中心</h1>
-            <p class="subtitle">请输入您的淘宝订单号，验证后下载商品</p>
-        </header>
+    <h2>请输入您的淘宝订单号</h2>
+    <input type="text" id="orderId" placeholder="例如: 120">
+    <button onclick="verifyOrder()">验证并下载</button>
+    <div id="message"></div>
 
-        <!-- 主卡片区域 -->
-        <main class="main-card">
-            <!-- 订单输入区 -->
-            <div class="input-section">
-                <div class="input-group">
-                    <i class="fas fa-receipt input-icon"></i>
-                    <input 
-                        type="text" 
-                        id="orderId" 
-                        placeholder="请输入您的淘宝订单号（纯数字）"
-                        maxlength="20"
-                    >
-                </div>
-                <!-- 提交按钮 -->
-                <button id="submitBtn" class="submit-btn">
-                    <i class="fas fa-paper-plane btn-icon"></i>
-                    验证并兑换
-                </button>
-            </div>
-
-            <!-- 状态显示区 -->
-            <div class="result-section">
-                <div id="loading" class="status-box loading">
-                    <i class="fas fa-spinner fa-spin"></i>
-                    <span>正在验证订单，请稍候...</span>
-                </div>
-                <div id="success" class="status-box success">
-                    <i class="fas fa-check-circle"></i>
-                    <div>
-                        <strong>验证成功！</strong>
-                        <p id="successMsg">正在准备您的下载文件...</p>
-                        <!-- 下载按钮会在验证成功后才显示 -->
-                        <button id="downloadBtn" class="download-btn">
-                            <i class="fas fa-download"></i>
-                            立即下载文件
-                        </button>
-                    </div>
-                </div>
-                <div id="error" class="status-box error">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <div>
-                        <strong>验证失败</strong>
-                        <p id="errorMsg">订单号无效或已过期</p>
-                        <button id="retryBtn" class="retry-btn">
-                            <i class="fas fa-redo"></i>
-                            重新尝试
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 使用说明 -->
-            <div class="instructions">
-                <h3><i class="fas fa-info-circle"></i> 使用说明</h3>
-                <ul>
-                    <li>请在淘宝付款成功后，在此页面输入您的<strong>淘宝订单号</strong></li>
-                    <li>订单号通常为18-20位纯数字，可在“我的订单”页面查看</li>
-                    <li>验证通过后，页面将自动提供下载链接</li>
-                    <li>如有问题，请通过淘宝旺旺联系卖家客服</li>
-                </ul>
-            </div>
-        </main>
-
-        <!-- 页脚 -->
-        <footer class="footer">
-            <p>© 2025 数字商品兑换中心 · 本页面仅用于已支付订单兑换</p>
-            <p class="notice">注意：请勿分享您的订单号给他人</p>
-        </footer>
-    </div>
-
-    <!-- 引入JavaScript文件 -->
-    <script src="script.js"></script>
+    <script>
+        // 这里稍后填入与Cloudflare Worker交互的JavaScript代码
+        async function verifyOrder() {
+            const orderId = document.getElementById('orderId').value;
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = "正在验证...";
+            // 这里需要调用你Cloudflare Worker的验证接口（/api/verify）
+            // 例如：const response = await fetch('https://your-worker.your-domain.com/api/verify', {...})
+            // 具体代码将根据你的后端地址来写
+            messageEl.textContent = `订单号 ${orderId} 已提交，后端接口配置后即可验证。`;
+        }
+    </script>
 </body>
 </html>
