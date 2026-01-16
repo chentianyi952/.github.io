@@ -3,174 +3,94 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>订单交付中心 - 获取您的数字商品</title>
+    <title>数字商品兑换中心</title>
+    <!-- 引入样式文件 -->
+    <link rel="stylesheet" href="style.css">
+    <!-- 引入Google字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- 引入FontAwesome图标 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        /* CSS样式将放在这里 */
-    </style>
 </head>
 <body>
-    <!-- 主容器 -->
     <div class="container">
-        <!-- 头部品牌区域 -->
+        <!-- 网站标题区 -->
         <header class="header">
-            <div class="brand">
-                <div class="logo">
-                    <i class="fas fa-box-open"></i>
-                </div>
-                <h1>数字商品交付中心</h1>
-                <p class="tagline">安全 · 快捷 · 专业</p>
-            </div>
-            <div class="security-badge">
-                <i class="fas fa-shield-alt"></i>
-                <span>Cloudflare® 安全防护</span>
-            </div>
+            <i class="fas fa-download logo-icon"></i>
+            <h1>数字商品兑换中心</h1>
+            <p class="subtitle">请输入您的淘宝订单号，验证后下载商品</p>
         </header>
 
-        <!-- 主内容卡片 -->
+        <!-- 主卡片区域 -->
         <main class="main-card">
-            <!-- 进度指示器 -->
-            <div class="progress-steps">
-                <div class="step active">
-                    <div class="step-number">1</div>
-                    <div class="step-label">输入订单号</div>
-                </div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <div class="step-label">验证订单</div>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div class="step-label">下载文件</div>
-                </div>
-                <div class="progress-bar">
-                    <div class="progress-fill" style="width: 33%"></div>
-                </div>
-            </div>
-
-            <!-- 订单输入区域 -->
+            <!-- 订单输入区 -->
             <div class="input-section">
-                <div class="section-header">
-                    <i class="fas fa-receipt"></i>
-                    <h2>订单验证</h2>
-                </div>
-                <p class="section-description">
-                    请输入您在淘宝订单详情页中看到的 <strong>18位订单编号</strong>，系统将验证订单并为您提供专属下载链接。
-                </p>
-                
                 <div class="input-group">
-                    <div class="input-with-icon">
-                        <i class="fas fa-hashtag"></i>
-                        <input 
-                            type="text" 
-                            id="orderId" 
-                            placeholder="例如: 299012345678901234"
-                            maxlength="18"
-                            autocomplete="off"
-                        >
-                        <div class="input-hint">18位数字</div>
+                    <i class="fas fa-receipt input-icon"></i>
+                    <input 
+                        type="text" 
+                        id="orderId" 
+                        placeholder="请输入您的淘宝订单号（纯数字）"
+                        maxlength="20"
+                    >
+                </div>
+                <!-- 提交按钮 -->
+                <button id="submitBtn" class="submit-btn">
+                    <i class="fas fa-paper-plane btn-icon"></i>
+                    验证并兑换
+                </button>
+            </div>
+
+            <!-- 状态显示区 -->
+            <div class="result-section">
+                <div id="loading" class="status-box loading">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span>正在验证订单，请稍候...</span>
+                </div>
+                <div id="success" class="status-box success">
+                    <i class="fas fa-check-circle"></i>
+                    <div>
+                        <strong>验证成功！</strong>
+                        <p id="successMsg">正在准备您的下载文件...</p>
+                        <!-- 下载按钮会在验证成功后才显示 -->
+                        <button id="downloadBtn" class="download-btn">
+                            <i class="fas fa-download"></i>
+                            立即下载文件
+                        </button>
                     </div>
-                    
-                    <!-- 简单验证码 -->
-                    <div class="captcha-container">
-                        <div class="captcha-display" id="captchaText">A3B8</div>
-                        <button type="button" class="captcha-refresh" id="refreshCaptcha">
+                </div>
+                <div id="error" class="status-box error">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        <strong>验证失败</strong>
+                        <p id="errorMsg">订单号无效或已过期</p>
+                        <button id="retryBtn" class="retry-btn">
                             <i class="fas fa-redo"></i>
-                        </button>
-                        <input 
-                            type="text" 
-                            id="captchaInput" 
-                            placeholder="请输入右侧验证码"
-                            maxlength="4"
-                            autocomplete="off"
-                        >
-                    </div>
-                    
-                    <div class="actions">
-                        <button class="btn btn-primary" id="verifyBtn" onclick="verifyOrder()">
-                            <span class="btn-text">立即验证并下载</span>
-                            <i class="fas fa-arrow-right btn-icon"></i>
-                        </button>
-                        <button class="btn btn-secondary" onclick="clearInput()">
-                            <i class="fas fa-eraser"></i>
-                            清空
+                            重新尝试
                         </button>
                     </div>
                 </div>
             </div>
 
-            <!-- 状态显示区域 -->
-            <div class="status-section" id="statusSection" style="display: none;">
-                <div class="status-header">
-                    <h3><i class="fas fa-spinner fa-spin" id="statusIcon"></i> <span id="statusTitle">正在验证订单</span></h3>
-                </div>
-                <div class="status-content">
-                    <div class="status-message" id="statusMessage">
-                        正在与服务器通信，请稍候...
-                    </div>
-                    <div class="progress-container" id="progressContainer" style="display: none;">
-                        <div class="progress-label">
-                            <span>下载进度</span>
-                            <span id="progressPercent">0%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="downloadProgress" style="width: 0%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 帮助信息 -->
-            <div class="help-section">
-                <details class="faq">
-                    <summary>
-                        <i class="fas fa-question-circle"></i>
-                        常见问题与帮助
-                        <i class="fas fa-chevron-down"></i>
-                    </summary>
-                    <div class="faq-content">
-                        <div class="faq-item">
-                            <h4><i class="fas fa-search"></i> 在哪里找到订单号？</h4>
-                            <p>登录淘宝 → 我的订单 → 点击订单详情 → 在订单信息中查看18位订单编号。</p>
-                        </div>
-                        <div class="faq-item">
-                            <h4><i class="fas fa-clock"></i> 验证需要多长时间？</h4>
-                            <p>通常1-3秒完成验证。如遇网络延迟，请稍候再试。</p>
-                        </div>
-                        <div class="faq-item">
-                            <h4><i class="fas fa-download"></i> 下载遇到问题怎么办？</h4>
-                            <p>请检查网络连接，或联系客服提供订单号获取协助。</p>
-                        </div>
-                    </div>
-                </details>
-                
-                <div class="contact-info">
-                    <p><i class="fas fa-headset"></i> 客服支持：淘宝旺旺联系卖家 | 服务时间：9:00-21:00</p>
-                </div>
+            <!-- 使用说明 -->
+            <div class="instructions">
+                <h3><i class="fas fa-info-circle"></i> 使用说明</h3>
+                <ul>
+                    <li>请在淘宝付款成功后，在此页面输入您的<strong>淘宝订单号</strong></li>
+                    <li>订单号通常为18-20位纯数字，可在“我的订单”页面查看</li>
+                    <li>验证通过后，页面将自动提供下载链接</li>
+                    <li>如有问题，请通过淘宝旺旺联系卖家客服</li>
+                </ul>
             </div>
         </main>
 
         <!-- 页脚 -->
         <footer class="footer">
-            <p>© 2024 数字商品交付系统 · 本页面通过 Cloudflare 全球网络加速</p>
-            <div class="footer-links">
-                <span><i class="fas fa-lock"></i> 安全传输 (SSL加密)</span>
-                <span><i class="fas fa-bolt"></i> 边缘计算交付</span>
-                <span><i class="fas fa-globe"></i> 全球CDN加速</span>
-            </div>
+            <p>© 2025 数字商品兑换中心 · 本页面仅用于已支付订单兑换</p>
+            <p class="notice">注意：请勿分享您的订单号给他人</p>
         </footer>
     </div>
 
-    <!-- 装饰元素 -->
-    <div class="decoration">
-        <div class="circle circle-1"></div>
-        <div class="circle circle-2"></div>
-        <div class="circle circle-3"></div>
-    </div>
-
-    <script>
-        // JavaScript代码将放在这里
-    </script>
+    <!-- 引入JavaScript文件 -->
+    <script src="script.js"></script>
 </body>
 </html>
